@@ -78,8 +78,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git add version
           git commit -m "Update version file ${{ env.OLS_VERSION }}"
-      - name: Pull changes
-        run: git pull -r
+          git rebase origin/master
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
