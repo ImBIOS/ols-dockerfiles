@@ -1,5 +1,8 @@
 # OpenLiteSpeed Docker Container
 
+> This Fork has a flavor which use php*-pear for PECL usage requirement.
+
+
 [![Build Status](https://github.com/ImBIOS/ols-dockerfiles/workflows/docker-build/badge.svg)](https://github.com/ImBIOS/ols-dockerfiles/actions/new)
 [![docker pulls](https://img.shields.io/docker/pulls/imbios/openlitespeed?style=flat&color=blue)](https://hub.docker.com/r/imbios/openlitespeed)
 [<img src="https://img.shields.io/badge/slack-LiteSpeed-blue.svg?logo=slack">](litespeedtech.com/slack)
