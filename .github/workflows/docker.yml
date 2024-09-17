@@ -60,7 +60,8 @@ jobs:
           cd ${{ env.FOLDER }}
           bash build.sh --ols ${{ env.OLS_VERSION }} --php ${{ matrix.PHP_VERSION }} --tag "${{ matrix.TAG }}" --push
           cd ..
-          echo "${{ env.OLS_VERSION }}" > version
+          # Update versions.json
+          jq ".${{ matrix.PHP_VERSION }} = \"${{ env.OLS_VERSION }}\"" versions.json > tmp.json && mv tmp.json versions.json
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -76,7 +77,7 @@ jobs:
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          git add version
+          git add versions.json
           git commit -m "Update version file ${{ env.OLS_VERSION }}"
           git rebase origin/master
       - name: Push changes
