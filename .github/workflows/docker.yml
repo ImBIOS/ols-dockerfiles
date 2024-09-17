@@ -24,6 +24,9 @@ jobs:
         PHP_VERSION: [lsphp74, lsphp80, lsphp81, lsphp82, lsphp83]
         TAG: [latest, ""]
     steps:
+      - name: Install jq
+        run: sudo apt install jq
+
       - uses: actions/checkout@v4
 
       - name: Set up Python
@@ -46,7 +49,7 @@ jobs:
 
       - name: Compare versions
         run: |
-          if [ "${{ env.OLS_VERSION }}" != $(cat version) ]; then
+          if [ "${{ env.OLS_VERSION }}" != $(cat versions.json | jq -r '.${{ matrix.PHP_VERSION }}') ]; then
             echo "IS_OUTDATED=true" >> $GITHUB_ENV
           fi
 
