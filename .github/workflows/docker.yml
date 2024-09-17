@@ -53,7 +53,7 @@ jobs:
           pipenv install
 
       - name: Run version check script
-        run: echo "OLS_VERSION=$(python get_ols_latest_version.py)" >> $GITHUB_ENV
+        run: echo "OLS_VERSION=$(pipenv run python get_ols_latest_version.py)" >> $GITHUB_ENV
 
       - name: Compare versions
         run: |
