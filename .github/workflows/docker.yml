@@ -1,6 +1,8 @@
 name: docker-build
 
 on:
+  schedule:
+    - cron: "0 0 * * *" # Every day at midnight
   workflow_dispatch:
   push:
     branches:
@@ -11,30 +13,64 @@ on:
       - master
 env:
   FOLDER: template
-  OLS_VERSION: 1.8.2
+  OLS_VERSION: 1.8.1
+  IS_OUTDATED: false
 
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
-      matrix: 
-        PHP_VERSION: [lsphp81, lsphp82, lsphp83]
-        TAG: [latest,'']
+      matrix:
+        PHP_VERSION: [
+            lsphp70,
+            lsphp71,
+            lsphp72,
+            lsphp73,
+            lsphp74,
+            lsphp80,
+            # TODO: Remove above after first release, as not supported by PHP anymore
+            lsphp81,
+            lsphp82,
+            lsphp83,
+          ]
+        TAG: [latest, ""]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pipenv"
+
+      - name: Install pipenv
+        run: curl https://raw.githubusercontent.com/pypa/pipenv/master/get-pipenv.py | python
+
+      - run: pipenv install
+
+      - name: Run version check script
+        run: echo "OLS_VERSION=$(python get_version.py)" >> $GITHUB_ENV
+
+      - name: Compare versions
+        run: |
+          if [ "${{ env.OLS_VERSION }}" != $(cat version) ]; then
+            echo "IS_OUTDATED=true" >> $GITHUB_ENV
+          fi
+
       - name: Docker build and push
-        if: ${{ (github.ref == 'refs/heads/master' && github.event_name == 'push') || (github.event_name == 'workflow_dispatch') }}
+        if: ${{ (github.ref == 'refs/heads/master' && github.event_name == 'push') || (github.event_name == 'workflow_dispatch') || (github.event_name == 'schedule' && env.IS_OUTDATED == 'true') }}
         run: |
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
           cd ${{ env.FOLDER }}
           bash build.sh --ols ${{ env.OLS_VERSION }} --php ${{ matrix.PHP_VERSION }} --tag "${{ matrix.TAG }}" --push
-        env: 
+          cd ..
+          echo "${{ env.OLS_VERSION }}" > version
+        env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
       - name: Docker build
         if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'pull_request' }}
         run: |
           cd ${{ env.FOLDER }}
-          bash build.sh --ols ${{ env.OLS_VERSION }} --php ${{ matrix.PHP_VERSION }} --tag ${{ matrix.TAG }}            
-
-  
+          bash build.sh --ols ${{ env.OLS_VERSION }} --php ${{ matrix.PHP_VERSION }} --tag ${{ matrix.TAG }}
