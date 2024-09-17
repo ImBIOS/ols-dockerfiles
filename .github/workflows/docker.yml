@@ -67,3 +67,12 @@ jobs:
         run: |
           cd ${{ env.FOLDER }}
           bash build.sh --ols ${{ env.OLS_VERSION }} --php ${{ matrix.PHP_VERSION }} --tag ${{ matrix.TAG }}
+
+      - name: Commit and push version file
+        if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'push' }}
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add version
+          git commit -m "Update version file"
+          git push
