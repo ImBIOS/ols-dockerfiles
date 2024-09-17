@@ -14,7 +14,7 @@ RUN apt update && apt install curl cron tzdata -y && \
   echo 'cloud-docker' > /usr/local/lsws/PLAT && rm -rf /openlitespeed && rm /openlitespeed-"$OLS_VERSION".tgz && \
   apt install mysql-client "$PHP_VERSION" "$PHP_VERSION"-common "$PHP_VERSION"-mysql "$PHP_VERSION"-opcache \
   "$PHP_VERSION"-curl "$PHP_VERSION"-imagick "$PHP_VERSION"-redis "$PHP_VERSION"-memcached "$PHP_VERSION"-intl -y && \
-  if [[ "$PHP_VERSION" == lsphp7* ]]; then apt install "$PHP_VERSION"-json -y; fi && \
+  bash -c 'if [[ "$PHP_VERSION" == lsphp7* ]]; then apt install "$PHP_VERSION"-json -y; fi' && \
   apt clean
 
 # RUN wget -O /usr/local/lsws/admin/misc/lsup.sh \
@@ -45,12 +45,10 @@ RUN /usr/local/lsws/bin/setup_docker.sh && rm /usr/local/lsws/bin/setup_docker.s
   chown 999:999 /usr/local/lsws/conf -R && \
   cp -RP /usr/local/lsws/conf/ /usr/local/lsws/.conf/ && \
   cp -RP /usr/local/lsws/admin/conf /usr/local/lsws/admin/.conf/ && \
-  if [[ "$PHP_VERSION" == lsphp8* ]]; then ln -sf /usr/local/lsws/"$PHP_VERSION"/bin/lsphp \
-  /usr/local/lsws/fcgi-bin/lsphp8; fi && \
-  if [[ "$PHP_VERSION" == lsphp8* ]]; then ln -sf /usr/local/lsws/fcgi-bin/lsphp8 /usr/local/lsws/fcgi-bin/lsphp; fi && \
-  if [[ "$PHP_VERSION" == lsphp7* ]]; then ln -sf /usr/local/lsws/"$PHP_VERSION"/bin/lsphp \
-  /usr/local/lsws/fcgi-bin/lsphp7; fi && \
-  if [[ "$PHP_VERSION" == lsphp7* ]]; then ln -sf /usr/local/lsws/fcgi-bin/lsphp7 /usr/local/lsws/fcgi-bin/lsphp; fi
+  bash -c 'if [[ "$PHP_VERSION" == lsphp8* ]]; then ln -sf /usr/local/lsws/"$PHP_VERSION"/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp8; fi' && \
+  bash -c 'if [[ "$PHP_VERSION" == lsphp8* ]]; then ln -sf /usr/local/lsws/fcgi-bin/lsphp8 /usr/local/lsws/fcgi-bin/lsphp; fi' && \
+  bash -c 'if [[ "$PHP_VERSION" == lsphp7* ]]; then ln -sf /usr/local/lsws/"$PHP_VERSION"/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp7; fi' && \
+  bash -c 'if [[ "$PHP_VERSION" == lsphp7* ]]; then ln -sf /usr/local/lsws/fcgi-bin/lsphp7 /usr/local/lsws/fcgi-bin/lsphp; fi'
 # #RUN sed -i "s|fcgi-bin/lsphp|/usr/local/lsws/$PHP_VERSION/bin/lsphp|g" /usr/local/lsws/conf/httpd_config.conf
 # RUN ["/bin/bash", "-c", "if [[ $PHP_VERSION == lsphp8* ]]; then ln -sf /usr/local/lsws/$PHP_VERSION/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp8; fi"]
 # RUN ["/bin/bash", "-c", "if [[ $PHP_VERSION == lsphp8* ]]; then ln -sf /usr/local/lsws/fcgi-bin/lsphp8 /usr/local/lsws/fcgi-bin/lsphp; fi"]
