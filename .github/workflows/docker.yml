@@ -18,6 +18,8 @@ env:
 
 jobs:
   test:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     strategy:
       matrix:
