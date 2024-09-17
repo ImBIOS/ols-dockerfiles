@@ -1,7 +1,7 @@
 # OpenLiteSpeed Docker Container
 
-[![Build Status](https://github.com/litespeedtech/ols-dockerfiles/workflows/docker-build/badge.svg)](https://github.com/litespeedtech/ols-dockerfiles/actions/new)
-[![docker pulls](https://img.shields.io/docker/pulls/litespeedtech/openlitespeed?style=flat&color=blue)](https://hub.docker.com/r/litespeedtech/openlitespeed)
+[![Build Status](https://github.com/ImBIOS/ols-dockerfiles/workflows/docker-build/badge.svg)](https://github.com/ImBIOS/ols-dockerfiles/actions/new)
+[![docker pulls](https://img.shields.io/docker/pulls/imbios/openlitespeed?style=flat&color=blue)](https://hub.docker.com/r/imbios/openlitespeed)
 [<img src="https://img.shields.io/badge/slack-LiteSpeed-blue.svg?logo=slack">](litespeedtech.com/slack)
 [<img src="https://img.shields.io/twitter/follow/litespeedtech.svg?label=Follow&style=social">](https://twitter.com/litespeedtech)
 
@@ -28,25 +28,25 @@ The system will regulary build both OpenLiteSpeed Edge and Latest stable version
 Download the openlitespeed image, we can use latest for latest version
 
 ```
-docker pull litespeedtech/openlitespeed:latest
+docker pull imbios/openlitespeed:latest
 ```
 
 or specify the OpenLiteSpeed version with lsphp version
 
 ```
-docker pull litespeedtech/openlitespeed:1.7.16-lsphp81
+docker pull imbios/openlitespeed:1.7.16-lsphp81
 ```
 
 ### Start a Container
 
 ```
-docker run --name openlitespeed -p 7080:7080 -p 80:80 -p 443:443 -it litespeedtech/openlitespeed:latest
+docker run --name openlitespeed -p 7080:7080 -p 80:80 -p 443:443 -it imbios/openlitespeed:latest
 ```
 
 You can also run with Detached mode, like so:
 
 ```
-docker run -d --name openlitespeed -p 7080:7080 -p 80:80 -p 443:443 -it litespeedtech/openlitespeed:latest
+docker run -d --name openlitespeed -p 7080:7080 -p 80:80 -p 443:443 -it imbios/openlitespeed:latest
 ```
 
 Tip, you can get rid of `-p 7080:7080` from the command if you don’t need the web admin access.
@@ -85,7 +85,7 @@ Sometimes you may want to install more packages from the default image, or some 
 For example,
 
 ```
-git clone https://github.com/litespeedtech/ols-dockerfiles.git
+git clone https://github.com/imbios/ols-dockerfiles.git
 cd ols-dockerfiles/template
 bash build.sh -O 1.7.16 -P lsphp81
 ```
