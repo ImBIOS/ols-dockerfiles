@@ -22,10 +22,6 @@ jobs:
     strategy:
       matrix:
         PHP_VERSION: [
-            lsphp70,
-            lsphp71,
-            lsphp72,
-            lsphp73,
             lsphp74,
             lsphp80,
             # TODO: Remove above after first release, as not supported by PHP anymore
